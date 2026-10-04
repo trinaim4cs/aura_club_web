@@ -17,11 +17,29 @@ import { isValidDestinationUrl, isValidQRCode } from "./tracking";
 export const QR_CODES_TABLE = "qr_codes";
 export const QR_SCANS_TABLE = "qr_scans";
 
+// In-memory cache for fast redirects (60 second TTL)
+const qrCodeCache = new Map<string, { qr: QRCode; expiresAt: number }>();
+const CACHE_TTL_MS = 60_000;
+
+export function invalidateQRCodeCache(code?: string) {
+  if (code) {
+    qrCodeCache.delete(code.trim().toLowerCase());
+  } else {
+    qrCodeCache.clear();
+  }
+}
+
 /**
  * Retrieves a dynamic QR code record by its public slug.
  */
 export async function getQRCodeByCode(code: string): Promise<QRCode | null> {
   if (!isValidQRCode(code)) return null;
+  const key = code.trim().toLowerCase();
+
+  const cached = qrCodeCache.get(key);
+  if (cached && Date.now() < cached.expiresAt) {
+    return cached.qr;
+  }
 
   const db = getSupabaseAdmin();
   if (!db) return null;
@@ -29,11 +47,13 @@ export async function getQRCodeByCode(code: string): Promise<QRCode | null> {
   const { data, error } = await db
     .from(QR_CODES_TABLE)
     .select("id, code, name, destination_url, active, created_at, updated_at")
-    .eq("code", code.trim().toLowerCase())
+    .eq("code", key)
     .single();
 
   if (error || !data) return null;
-  return data as QRCode;
+  const qr = data as QRCode;
+  qrCodeCache.set(key, { qr, expiresAt: Date.now() + CACHE_TTL_MS });
+  return qr;
 }
 
 /**
@@ -129,7 +149,9 @@ export async function updateQRCode(
     .single();
 
   if (error) return { qr: null, error: error.message };
-  return { qr: data as QRCode };
+  const updatedQr = data as QRCode;
+  invalidateQRCodeCache(updatedQr.code);
+  return { qr: updatedQr };
 }
 
 /**
@@ -157,6 +179,7 @@ export async function deleteQRCode(id: string): Promise<{ ok: boolean; error?: s
 
   const { error } = await db.from(QR_CODES_TABLE).delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
+  invalidateQRCodeCache();
   return { ok: true };
 }
 

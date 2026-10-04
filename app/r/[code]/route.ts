@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
 import { clientIp, createLimiter } from "@/lib/utils/rateLimit";
 import { extractScanMetadata, isValidDestinationUrl, isValidQRCode } from "@/qr/tracking";
 import { getQRCodeByCode, recordQRScan } from "@/qr/analytics";
@@ -40,7 +41,7 @@ export async function GET(req: Request, context: RouteContext) {
     });
   }
 
-  // 3. Look up QR code record
+  // 3. Fast cached look up for QR code record
   let qr;
   try {
     qr = await getQRCodeByCode(code);
@@ -81,15 +82,20 @@ export async function GET(req: Request, context: RouteContext) {
   // 6. Extract scan metadata (geo, device, OS, browser, privacy hash)
   const metadata = extractScanMetadata(req);
 
-  // 7. Persist scan event (non-fatal: log failure but redirect anyway)
+  // 7. Non-blocking asynchronous scan persistence using Vercel's waitUntil
+  // User phone gets 302 redirect IMMEDIATELY without waiting for database writes!
   try {
-    await recordQRScan(qr.id, metadata);
-  } catch (err) {
-    console.error("[qr-redirect] Scan recording failed:", err);
+    waitUntil(
+      recordQRScan(qr.id, metadata).catch((err) => {
+        console.error("[qr-redirect] Background scan logging error:", err);
+      }),
+    );
+  } catch {
+    // Fallback for tests or local execution where waitUntil is unbound
+    recordQRScan(qr.id, metadata).catch(() => {});
   }
 
-  // 8. 302 temporary redirect with strict anti-caching headers
-  // Prevents browsers and CDNs from caching the redirect, guaranteeing future scans register.
+  // 8. 302 temporary redirect with anti-caching headers
   return NextResponse.redirect(qr.destination_url, {
     status: 302,
     headers: {

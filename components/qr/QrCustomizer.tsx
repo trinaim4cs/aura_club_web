@@ -10,6 +10,7 @@ import type {
   QRStylingConfig,
 } from "@/qr/types";
 import {
+  AURA_LOGO_DATA_URI,
   AURA_PRESET_CONFIG,
   DEFAULT_QR_CONFIG,
   buildQrCodeStylingOptions,
@@ -37,7 +38,7 @@ export default function QrCustomizer({
     cornerDotType: "square",
     qrColor: "#000000",
     bgColor: "#ffffff",
-    logoUrl: "/aura/qr-logo.svg",
+    logoUrl: AURA_LOGO_DATA_URI,
     logoSize: 0.38,
     logoMargin: 2,
     frame: "none",
@@ -137,7 +138,7 @@ export default function QrCustomizer({
       cornerDotType: "square",
       qrColor: "#000000",
       bgColor: "#ffffff",
-      logoUrl: "/aura/qr-logo.svg",
+      logoUrl: AURA_LOGO_DATA_URI,
       logoSize: 0.38,
       logoMargin: 2,
       frame: "none",
@@ -514,7 +515,7 @@ export default function QrCustomizer({
                   setSelectedLogoIdx(5);
                   setConfig((p) => ({
                     ...p,
-                    logoUrl: "/aura/qr-logo.svg",
+                    logoUrl: AURA_LOGO_DATA_URI,
                     logoSize: 0.38,
                     logoMargin: 2,
                   }));

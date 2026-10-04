@@ -15,9 +15,7 @@ export default function QrPage() {
     >
       {/* Unified authenticated workspace hosting QR Studio and Campaigns Dashboard */}
       <QrWorkspace />
-      <div className="hidden">
-        <QrCustomizer />
-      </div>
+      {/* <QrCustomizer /> rendered dynamically inside QrWorkspace */}
     </main>
   );
 }

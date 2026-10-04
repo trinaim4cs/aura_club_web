@@ -16,3 +16,5 @@ review-receipts/
 .env
 .env.*
 !.env.example
+.vercel
+.env*

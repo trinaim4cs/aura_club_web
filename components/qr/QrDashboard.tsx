@@ -186,102 +186,175 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
   const totalAllVisitors = qrs.reduce((acc, q) => acc + q.unique_visitors_est, 0);
 
   return (
-    <div className="space-y-8">
-      {/* Top Metric Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4">
-          <span className="text-[11px] font-mono uppercase text-slate-400">Total Campaigns</span>
-          <p className="text-2xl font-extrabold text-white mt-1">{qrs.length}</p>
+    <div className="space-y-8 font-sans text-[#f2efe9]">
+      {/* =========================================================================
+          TOP METRIC STRIP: BRUTALIST KPI BLOCKS
+         ========================================================================= */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* KPI 1: Total Campaigns */}
+        <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 shadow-lg backdrop-blur relative overflow-hidden">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8d8a84]">
+              [ 01 // Total Campaigns ]
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+          </div>
+          <p className="text-4xl font-extrabold uppercase text-[#f2efe9] t-display mt-2 tracking-tight">
+            {qrs.length}
+          </p>
+          <span className="font-mono text-[9px] text-[#8d8a84] uppercase mt-1 block">
+            REGISTERED DISPATCH TARGETS
+          </span>
         </div>
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4">
-          <span className="text-[11px] font-mono uppercase text-slate-400">Total Scans (All)</span>
-          <p className="text-2xl font-extrabold text-sky-400 mt-1">{totalAllScans}</p>
+
+        {/* KPI 2: Total Scans */}
+        <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 shadow-lg backdrop-blur relative overflow-hidden">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8d8a84]">
+              [ 02 // Total Scans ]
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+          </div>
+          <p className="text-4xl font-extrabold uppercase text-white t-display mt-2 tracking-tight">
+            {totalAllScans}
+          </p>
+          <span className="font-mono text-[9px] text-[#8d8a84] uppercase mt-1 block">
+            ALL-TIME AGGREGATE TRAFFIC
+          </span>
         </div>
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4">
-          <span className="text-[11px] font-mono uppercase text-slate-400">Unique Devices (All)</span>
-          <p className="text-2xl font-extrabold text-emerald-400 mt-1">{totalAllVisitors}</p>
+
+        {/* KPI 3: Unique Devices */}
+        <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 shadow-lg backdrop-blur relative overflow-hidden">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8d8a84]">
+              [ 03 // Unique Devices ]
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          </div>
+          <p className="text-4xl font-extrabold uppercase text-emerald-400 t-display mt-2 tracking-tight">
+            {totalAllVisitors}
+          </p>
+          <span className="font-mono text-[9px] text-[#8d8a84] uppercase mt-1 block">
+            SALTED SHA-256 IDENTIFIERS
+          </span>
         </div>
-        <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+
+        {/* KPI 4: Active Nodes + New QR Action */}
+        <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 shadow-lg backdrop-blur flex flex-col justify-between">
           <div>
-            <span className="text-[11px] font-mono uppercase text-slate-400">Campaigns Active</span>
-            <p className="text-2xl font-extrabold text-purple-400 mt-1">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#8d8a84]">
+                [ 04 // ACTIVE NODES ]
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+            </div>
+            <p className="text-3xl font-extrabold uppercase text-white t-display mt-1">
               {qrs.filter((q) => q.active).length} / {qrs.length}
             </p>
           </div>
+
           <button
             onClick={() => {
               setCreateError(null);
               setCreateOpen(true);
             }}
-            className="px-3.5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold uppercase tracking-wider shadow-lg shadow-sky-500/20 transition"
+            className="group relative border border-white bg-white hover:bg-transparent text-black hover:text-white mt-3 py-2 px-4 font-mono font-bold text-xs uppercase tracking-[0.14em] transition-all shadow-[0_0_15px_rgba(255,255,255,0.15)] flex items-center justify-center gap-2"
           >
-            + New QR
+            <span>+ New QR</span>
+            <span className="transition-transform group-hover:translate-x-1">→</span>
           </button>
         </div>
       </div>
 
-      {/* Campaign Management Table */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden backdrop-blur">
-        <div className="p-4 sm:p-5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      {/* =========================================================================
+          CAMPAIGN MANAGEMENT TABLE
+         ========================================================================= */}
+      <div className="border border-white/10 bg-[#0d0d0f]/90 shadow-2xl backdrop-blur overflow-hidden">
+        {/* Table Toolbar */}
+        <div className="p-5 sm:p-6 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-bold text-white tracking-tight">Active Dynamic Campaigns</h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-extrabold uppercase tracking-tight text-white t-display">
+                Active Dynamic Campaigns
+              </h2>
+              <span className="border border-white/15 bg-white/[0.04] px-2 py-0.5 font-mono text-[10px] text-[#8d8a84]">
+                LIVE DISPATCH TABLE
+              </span>
+            </div>
+            <p className="font-mono text-xs text-[#8d8a84] mt-1">
               Edit destination URLs anytime. Printed QR codes remain permanent.
             </p>
           </div>
-          <div className="w-full sm:w-64">
-            <input
-              type="text"
-              placeholder="Search campaigns or slugs..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none"
-            />
+
+          {/* Search Bar */}
+          <div className="w-full sm:w-72">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="SEARCH CAMPAIGNS OR SLUGS..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full border border-white/15 bg-black/60 px-3.5 py-2 font-mono text-xs text-white placeholder-[#8d8a84]/60 focus:border-white focus:outline-none uppercase tracking-wider"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-[#8d8a84]">
+                ⌕
+              </span>
+            </div>
           </div>
         </div>
 
+        {/* Table Content */}
         {loading ? (
-          <div className="py-12 text-center text-xs text-slate-500 font-mono">Loading campaigns from Supabase...</div>
+          <div className="py-16 text-center text-xs text-[#8d8a84] font-mono tracking-widest uppercase">
+            CONNECTING TO SUPABASE TELEMETRY ENGINE...
+          </div>
         ) : filteredQrs.length === 0 ? (
-          <div className="py-12 text-center text-xs text-slate-500 font-mono">No campaigns match search criteria.</div>
+          <div className="py-16 text-center text-xs text-[#8d8a84] font-mono tracking-widest uppercase">
+            NO CAMPAIGNS MATCH FILTER CRITERIA.
+          </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-slate-800 bg-slate-950/60 font-mono uppercase text-slate-400 text-[10px]">
+            <table className="w-full text-left text-xs font-mono">
+              <thead className="border-b border-white/10 bg-black/50 uppercase text-[#8d8a84] text-[10px] tracking-wider">
                 <tr>
-                  <th className="py-3 px-4">Campaign & Slug</th>
-                  <th className="py-3 px-4">Destination Target</th>
-                  <th className="py-3 px-4 text-center">Status</th>
-                  <th className="py-3 px-4 text-right">Total Scans</th>
-                  <th className="py-3 px-4 text-right">Unique Devices</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3.5 px-5">Campaign & Slug</th>
+                  <th className="py-3.5 px-5">Destination Target</th>
+                  <th className="py-3.5 px-5 text-center">Status</th>
+                  <th className="py-3.5 px-5 text-right">Total Scans</th>
+                  <th className="py-3.5 px-5 text-right">Unique Devices</th>
+                  <th className="py-3.5 px-5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-white/[0.06] text-[#c8c5be]">
                 {filteredQrs.map((qr) => {
                   const isSelected = selectedQrId === qr.id;
                   return (
                     <tr
                       key={qr.id}
-                      className={`hover:bg-slate-800/40 transition ${
-                        isSelected ? "bg-sky-950/20 border-l-2 border-sky-400" : ""
+                      className={`hover:bg-white/[0.03] transition-colors ${
+                        isSelected ? "bg-white/[0.04] border-l-2 border-white" : ""
                       }`}
                     >
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-white">{qr.name}</div>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <code className="text-[11px] font-mono text-sky-400">/r/{qr.code}</code>
+                      {/* Name & Slug */}
+                      <td className="py-4 px-5">
+                        <div className="font-bold text-white text-sm tracking-tight">{qr.name}</div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <code className="text-[11px] text-sky-400 font-mono tracking-wider">
+                            /r/{qr.code}
+                          </code>
                           <button
                             onClick={() => handleCopyLink(qr.code)}
                             title="Copy full scan URL"
-                            className="text-[10px] text-slate-400 hover:text-white px-1.5 py-0.5 rounded bg-slate-800"
+                            className="border border-white/15 bg-white/[0.04] hover:bg-white hover:text-black px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-[#8d8a84] transition"
                           >
-                            {copiedCode === qr.code ? "Copied!" : "Copy"}
+                            {copiedCode === qr.code ? "COPIED ✓" : "COPY"}
                           </button>
                         </div>
                       </td>
-                      <td className="py-3 px-4 max-w-xs">
-                        <div className="truncate text-slate-400 font-mono text-[11px]" title={qr.destination_url}>
+
+                      {/* Destination URL */}
+                      <td className="py-4 px-5 max-w-sm">
+                        <div className="truncate text-[#8d8a84] text-[11px]" title={qr.destination_url}>
                           {qr.destination_url}
                         </div>
                         <button
@@ -294,49 +367,68 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                             });
                             setEditError(null);
                           }}
-                          className="text-[10px] text-sky-400 hover:underline mt-0.5 block"
+                          className="text-[10px] text-white/70 hover:text-white uppercase tracking-wider underline underline-offset-2 mt-1 block"
                         >
-                          Change Target URL
+                          Change Target URL →
                         </button>
                       </td>
-                      <td className="py-3 px-4 text-center">
+
+                      {/* Status */}
+                      <td className="py-4 px-5 text-center">
                         <button
                           onClick={() => handleToggleActive(qr)}
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold transition ${
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 border text-[10px] uppercase tracking-wider font-bold transition ${
                             qr.active
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
-                              : "bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20"
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
+                              : "border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20"
                           }`}
                         >
-                          {qr.active ? "Active" : "Paused"}
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              qr.active ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
+                            }`}
+                          />
+                          <span>{qr.active ? "Active" : "Paused"}</span>
                         </button>
                       </td>
-                      <td className="py-3 px-4 text-right font-mono font-bold text-white">{qr.total_scans}</td>
-                      <td className="py-3 px-4 text-right font-mono text-emerald-300">{qr.unique_visitors_est}</td>
-                      <td className="py-3 px-4 text-right">
+
+                      {/* Total Scans */}
+                      <td className="py-4 px-5 text-right font-bold text-white text-sm">
+                        {qr.total_scans}
+                      </td>
+
+                      {/* Unique Devices */}
+                      <td className="py-4 px-5 text-right text-emerald-400 text-sm">
+                        {qr.unique_visitors_est}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-4 px-5 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setSelectedQrId(qr.id)}
-                            className={`px-2.5 py-1 rounded text-[11px] font-medium transition ${
+                            className={`px-3 py-1.5 border text-[10px] uppercase tracking-wider transition ${
                               isSelected
-                                ? "bg-sky-500 text-white"
-                                : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                                ? "border-white bg-white text-black font-bold"
+                                : "border-white/15 bg-white/[0.04] text-[#c8c5be] hover:text-white hover:border-white/30"
                             }`}
                           >
                             Analytics
                           </button>
+
                           {onCustomizeQr && (
                             <button
                               onClick={() => onCustomizeQr(qr)}
-                              className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] font-medium"
+                              className="px-3 py-1.5 border border-white/15 bg-white/[0.04] text-[#c8c5be] hover:text-white hover:border-white/30 text-[10px] uppercase tracking-wider transition"
                             >
                               Style QR
                             </button>
                           )}
+
                           <button
                             onClick={() => handleDelete(qr.id, qr.name)}
-                            className="text-slate-500 hover:text-rose-400 p-1"
-                            title="Delete QR Code"
+                            className="p-1.5 text-[#8d8a84] hover:text-rose-400 transition"
+                            title="Delete Campaign"
                           >
                             ✕
                           </button>
@@ -351,20 +443,24 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
         )}
       </div>
 
-      {/* Selected Campaign Analytics Drilldown */}
+      {/* =========================================================================
+          SELECTED CAMPAIGN ANALYTICS DRILLDOWN
+         ========================================================================= */}
       {selectedQrId && (
-        <div className="space-y-6 pt-4 border-t border-slate-800">
-          <div className="flex items-center justify-between">
+        <div className="space-y-6 pt-6 border-t border-white/10">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <span className="text-[11px] font-mono uppercase text-sky-400 tracking-wider">
+              <span className="font-mono text-[10px] uppercase text-sky-400 tracking-[0.16em]">
                 Real-Time Campaign Telemetry
               </span>
-              <h3 className="text-xl font-extrabold text-white mt-0.5">
+              <h3 className="text-2xl sm:text-3xl font-extrabold uppercase text-white t-display mt-0.5">
                 {qrs.find((q) => q.id === selectedQrId)?.name || "Campaign Analytics"}
               </h3>
             </div>
             {summaryLoading && (
-              <span className="text-xs font-mono text-slate-400 animate-pulse">Refreshing metrics...</span>
+              <span className="font-mono text-xs text-[#8d8a84] animate-pulse">
+                POLLING EDGE TELEMETRY...
+              </span>
             )}
           </div>
 
@@ -372,54 +468,84 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
             <>
               {/* Campaign KPI Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-slate-400">Total Scans</span>
-                  <p className="text-xl font-bold text-white mt-1">{summary.total_scans}</p>
+                <div className="border border-white/10 bg-[#0d0d0f]/80 p-4">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#8d8a84] block">
+                    Total Scans
+                  </span>
+                  <p className="text-2xl font-extrabold text-white t-display mt-1">
+                    {summary.total_scans}
+                  </p>
                 </div>
-                <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-slate-400">Unique Devices</span>
-                  <p className="text-xl font-bold text-emerald-400 mt-1">{summary.unique_visitors_est}</p>
+
+                <div className="border border-white/10 bg-[#0d0d0f]/80 p-4">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#8d8a84] block">
+                    Unique Devices
+                  </span>
+                  <p className="text-2xl font-extrabold text-emerald-400 t-display mt-1">
+                    {summary.unique_visitors_est}
+                  </p>
                 </div>
-                <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-slate-400">Scans Today</span>
-                  <p className="text-xl font-bold text-sky-400 mt-1">{summary.scans_today}</p>
+
+                <div className="border border-white/10 bg-[#0d0d0f]/80 p-4">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#8d8a84] block">
+                    Scans Today
+                  </span>
+                  <p className="text-2xl font-extrabold text-white t-display mt-1">
+                    {summary.scans_today}
+                  </p>
                 </div>
-                <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-slate-400">Last 7 Days</span>
-                  <p className="text-xl font-bold text-purple-400 mt-1">{summary.scans_this_week}</p>
+
+                <div className="border border-white/10 bg-[#0d0d0f]/80 p-4">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#8d8a84] block">
+                    Last 7 Days
+                  </span>
+                  <p className="text-2xl font-extrabold text-white t-display mt-1">
+                    {summary.scans_this_week}
+                  </p>
                 </div>
-                <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-slate-400">Bot Scans Filtered</span>
-                  <p className="text-xl font-bold text-slate-400 mt-1">{summary.bot_scans}</p>
+
+                <div className="border border-white/10 bg-[#0d0d0f]/80 p-4">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#8d8a84] block">
+                    Bot Scans Filtered
+                  </span>
+                  <p className="text-2xl font-extrabold text-[#8d8a84] t-display mt-1">
+                    {summary.bot_scans}
+                  </p>
                 </div>
               </div>
 
-              {/* Time Series Activity */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-4">
-                  Daily Scan Activity & Unique Visitors
-                </h4>
+              {/* Time Series Activity Bar Chart */}
+              <div className="border border-white/10 bg-[#0d0d0f]/90 p-6 shadow-xl">
+                <div className="flex items-center justify-between mb-6">
+                  <h4 className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-white">
+                    Daily Scan Activity
+                  </h4>
+                  <span className="font-mono text-[10px] text-[#8d8a84]">
+                    TRAFFIC VELOCITY (UTC)
+                  </span>
+                </div>
+
                 {summary.scans_over_time.length === 0 ? (
-                  <div className="py-8 text-center text-xs text-slate-500 font-mono">
-                    No scans registered for this QR code yet.
+                  <div className="py-12 text-center text-xs text-[#8d8a84] font-mono tracking-widest uppercase">
+                    NO SCAN ACTIVITY LOGGED FOR THIS SLUG YET.
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-3 font-mono">
                     {summary.scans_over_time.map((pt) => {
                       const maxScans = Math.max(...summary.scans_over_time.map((p) => p.scans), 1);
                       const widthPercent = Math.max((pt.scans / maxScans) * 100, 4);
                       return (
-                        <div key={pt.date} className="flex items-center gap-3 text-xs">
-                          <span className="w-20 font-mono text-slate-400 text-[11px]">{pt.date}</span>
-                          <div className="flex-1 bg-slate-950 rounded-full h-5 overflow-hidden flex items-center p-0.5">
+                        <div key={pt.date} className="flex items-center gap-4 text-xs">
+                          <span className="w-24 text-[#8d8a84] text-[11px]">{pt.date}</span>
+                          <div className="flex-1 bg-black/60 h-6 border border-white/10 flex items-center p-0.5">
                             <div
-                              className="bg-sky-500 h-full rounded-full transition-all flex items-center justify-end px-2 text-[10px] font-bold text-white"
+                              className="bg-white h-full transition-all flex items-center justify-end px-2 text-[10px] font-bold text-black"
                               style={{ width: `${widthPercent}%` }}
                             >
                               {pt.scans}
                             </div>
                           </div>
-                          <span className="w-24 text-right font-mono text-[11px] text-emerald-400">
+                          <span className="w-24 text-right text-[11px] text-emerald-400">
                             {pt.unique_visitors} unique
                           </span>
                         </div>
@@ -429,27 +555,31 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                 )}
               </div>
 
-              {/* Distributions Grid */}
+              {/* Distributions Grid (3 Columns) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Geo: Countries & Cities */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3">
-                    Top Geographies
-                  </h4>
+                {/* 1. Geographies */}
+                <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 font-mono">
+                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                      Top Geographies
+                    </h4>
+                    <span className="text-[10px] text-[#8d8a84]">LOC</span>
+                  </div>
+
                   {summary.countries.length === 0 ? (
-                    <p className="text-xs text-slate-500 font-mono">No geo data logged.</p>
+                    <p className="text-xs text-[#8d8a84]">No geo data logged.</p>
                   ) : (
                     <div className="space-y-3">
                       {summary.countries.map((c) => (
                         <div key={c.label}>
                           <div className="flex justify-between text-xs mb-1">
-                            <span className="text-slate-300">{c.label}</span>
-                            <span className="font-mono text-slate-400">
+                            <span className="text-[#c8c5be]">{c.label}</span>
+                            <span className="text-[#8d8a84]">
                               {c.count} ({c.percentage}%)
                             </span>
                           </div>
-                          <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
-                            <div className="bg-sky-400 h-full rounded-full" style={{ width: `${c.percentage}%` }} />
+                          <div className="w-full bg-black/60 h-1.5 border border-white/10 overflow-hidden">
+                            <div className="bg-white h-full" style={{ width: `${c.percentage}%` }} />
                           </div>
                         </div>
                       ))}
@@ -457,31 +587,39 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                   )}
                 </div>
 
-                {/* Operating Systems & Browsers */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3">
-                    Platforms & Browsers
-                  </h4>
+                {/* 2. Platforms & OS */}
+                <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 font-mono">
+                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                      Platforms & Browsers
+                    </h4>
+                    <span className="text-[10px] text-[#8d8a84]">CLIENT</span>
+                  </div>
+
                   <div className="space-y-4">
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1.5">OS</span>
+                      <span className="text-[9px] uppercase text-[#8d8a84] block mb-1.5">
+                        OPERATING SYSTEM
+                      </span>
                       <div className="space-y-1.5">
                         {summary.operating_systems.slice(0, 4).map((os) => (
                           <div key={os.label} className="flex justify-between text-xs">
-                            <span className="text-slate-300">{os.label}</span>
-                            <span className="font-mono text-slate-400">{os.count}</span>
+                            <span className="text-[#c8c5be]">{os.label}</span>
+                            <span className="text-[#8d8a84]">{os.count}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-800">
-                      <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1.5">Browsers</span>
+                    <div className="pt-2 border-t border-white/10">
+                      <span className="text-[9px] uppercase text-[#8d8a84] block mb-1.5">
+                        BROWSER ENGINE
+                      </span>
                       <div className="space-y-1.5">
                         {summary.browsers.slice(0, 4).map((b) => (
                           <div key={b.label} className="flex justify-between text-xs">
-                            <span className="text-slate-300">{b.label}</span>
-                            <span className="font-mono text-slate-400">{b.count}</span>
+                            <span className="text-[#c8c5be]">{b.label}</span>
+                            <span className="text-[#8d8a84]">{b.count}</span>
                           </div>
                         ))}
                       </div>
@@ -489,36 +627,44 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                   </div>
                 </div>
 
-                {/* Device Types & Traffic Sources */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-5">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300 mb-3">
-                    Devices & Traffic Sources
-                  </h4>
+                {/* 3. Devices & Referrers */}
+                <div className="border border-white/10 bg-[#0d0d0f]/90 p-5 font-mono">
+                  <div className="flex items-center justify-between mb-4 pb-2 border-b border-white/10">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+                      Devices & Traffic Sources
+                    </h4>
+                    <span className="text-[10px] text-[#8d8a84]">SOURCE</span>
+                  </div>
+
                   <div className="space-y-4">
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1.5">Device Type</span>
+                      <span className="text-[9px] uppercase text-[#8d8a84] block mb-1.5">
+                        HARDWARE PROFILE
+                      </span>
                       <div className="space-y-1.5">
                         {summary.device_types.map((d) => (
                           <div key={d.label} className="flex justify-between text-xs">
-                            <span className="text-slate-300 capitalize">{d.label}</span>
-                            <span className="font-mono text-slate-400">{d.count}</span>
+                            <span className="text-[#c8c5be] capitalize">{d.label}</span>
+                            <span className="text-[#8d8a84]">{d.count}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-800">
-                      <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1.5">Referrers</span>
+                    <div className="pt-2 border-t border-white/10">
+                      <span className="text-[9px] uppercase text-[#8d8a84] block mb-1.5">
+                        HTTP REFERRER
+                      </span>
                       {summary.referrers.length === 0 ? (
-                        <p className="text-xs text-slate-500 font-mono">Direct / Camera scans</p>
+                        <p className="text-xs text-[#8d8a84]">Direct Camera Scanner</p>
                       ) : (
                         <div className="space-y-1.5">
                           {summary.referrers.slice(0, 4).map((r) => (
                             <div key={r.label} className="flex justify-between text-xs truncate">
-                              <span className="text-slate-300 truncate mr-2" title={r.label}>
+                              <span className="text-[#c8c5be] truncate mr-2" title={r.label}>
                                 {r.label}
                               </span>
-                              <span className="font-mono text-slate-400">{r.count}</span>
+                              <span className="text-[#8d8a84]">{r.count}</span>
                             </div>
                           ))}
                         </div>
@@ -529,47 +675,53 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
               </div>
 
               {/* Recent Scan Audit Log */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden">
-                <div className="p-4 border-b border-slate-800">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-                    Recent Scan Events (Privacy Preserved)
+              <div className="border border-white/10 bg-[#0d0d0f]/90 overflow-hidden font-mono">
+                <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-[0.14em] text-white">
+                    Recent Scan Events
                   </h4>
+                  <span className="text-[10px] text-[#8d8a84]">
+                    PRIVACY AUDIT TRAIL // RAW IP ZEROIZED
+                  </span>
                 </div>
+
                 {summary.recent_scans.length === 0 ? (
-                  <div className="py-6 text-center text-xs text-slate-500 font-mono">No scans recorded yet.</div>
+                  <div className="py-8 text-center text-xs text-[#8d8a84]">
+                    NO SCANS RECORDED IN CURRENT AUDIT BUFFER.
+                  </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
-                      <thead className="border-b border-slate-800 bg-slate-950/60 font-mono uppercase text-slate-400 text-[10px]">
+                      <thead className="border-b border-white/10 bg-black/50 uppercase text-[#8d8a84] text-[10px] tracking-wider">
                         <tr>
-                          <th className="py-2.5 px-4">Time (UTC)</th>
-                          <th className="py-2.5 px-4">Location</th>
-                          <th className="py-2.5 px-4">Device</th>
-                          <th className="py-2.5 px-4">Browser & OS</th>
-                          <th className="py-2.5 px-4 text-center">Type</th>
+                          <th className="py-3 px-5">Time (UTC)</th>
+                          <th className="py-3 px-5">Location</th>
+                          <th className="py-3 px-5">Device</th>
+                          <th className="py-3 px-5">Browser & OS</th>
+                          <th className="py-3 px-5 text-center">Type</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                      <tbody className="divide-y divide-white/[0.06] text-[#c8c5be]">
                         {summary.recent_scans.slice(0, 15).map((s) => (
-                          <tr key={s.id} className="hover:bg-slate-800/30">
-                            <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">
+                          <tr key={s.id} className="hover:bg-white/[0.03] transition-colors">
+                            <td className="py-3 px-5 text-[#8d8a84] text-[11px]">
                               {new Date(s.scanned_at).toLocaleString()}
                             </td>
-                            <td className="py-2.5 px-4">
+                            <td className="py-3 px-5">
                               {s.city || s.country ? `${s.city ?? "Unknown"}, ${s.country ?? ""}` : "Unknown"}
                             </td>
-                            <td className="py-2.5 px-4 capitalize">{s.device_type}</td>
-                            <td className="py-2.5 px-4">
+                            <td className="py-3 px-5 capitalize">{s.device_type}</td>
+                            <td className="py-3 px-5">
                               {s.browser} • {s.operating_system}
                             </td>
-                            <td className="py-2.5 px-4 text-center">
+                            <td className="py-3 px-5 text-center">
                               {s.is_bot ? (
-                                <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-mono">
+                                <span className="border border-amber-500/30 bg-amber-500/10 text-amber-400 px-2 py-0.5 text-[9px] uppercase tracking-wider">
                                   Bot
                                 </span>
                               ) : (
-                                <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-mono">
-                                  User
+                                <span className="border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-2 py-0.5 text-[9px] uppercase tracking-wider">
+                                  Verified
                                 </span>
                               )}
                             </td>
@@ -582,23 +734,32 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
               </div>
             </>
           ) : (
-            <div className="py-12 text-center text-xs text-slate-500 font-mono">Select a campaign to view metrics.</div>
+            <div className="py-12 text-center text-xs text-[#8d8a84] font-mono tracking-widest uppercase">
+              SELECT A CAMPAIGN FROM THE MATRIX ABOVE TO AUDIT METRICS.
+            </div>
           )}
         </div>
       )}
 
-      {/* CREATE MODAL */}
+      {/* =========================================================================
+          CREATE MODAL
+         ========================================================================= */}
       {createOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Create New Dynamic QR Campaign</h3>
-            <p className="text-xs text-slate-400 mt-1">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="w-full max-w-lg border border-white/15 bg-[#0d0d0f] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.9)] relative">
+            <span className="font-mono text-[10px] text-sky-400 uppercase tracking-widest block mb-1">
+              [ DISPATCH ENGINE // NEW CAMPAIGN ]
+            </span>
+            <h3 className="text-2xl font-extrabold uppercase tracking-tight text-white t-display">
+              Create New Dynamic QR Campaign
+            </h3>
+            <p className="text-xs text-[#8d8a84] mt-2 font-mono leading-relaxed">
               Supports any external destination URL (Luma, Google Forms, Discord, Notion, Event page).
             </p>
 
-            <form onSubmit={handleCreateSubmit} className="mt-5 space-y-4">
+            <form onSubmit={handleCreateSubmit} className="mt-6 space-y-5">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#c8c5be] mb-1.5">
                   Campaign Name
                 </label>
                 <input
@@ -607,16 +768,16 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                   placeholder="e.g. SRM AI Hackathon 2026"
                   value={createForm.name}
                   onChange={(e) => setCreateForm((p) => ({ ...p, name: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white placeholder-slate-600 focus:border-sky-500 focus:outline-none"
+                  className="w-full border border-white/15 bg-black/60 px-3.5 py-2.5 text-xs text-white placeholder-[#8d8a84]/50 focus:border-white focus:outline-none font-mono tracking-wide"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#c8c5be] mb-1.5">
                   QR Slug (/r/[code])
                 </label>
-                <div className="flex items-center rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-slate-400">
-                  <span className="font-mono text-slate-500">https://join-aura.vercel.app/r/</span>
+                <div className="flex items-center border border-white/15 bg-black/60 px-3.5 py-2 text-xs font-mono">
+                  <span className="text-[#8d8a84]">https://join-aura.vercel.app/r/</span>
                   <input
                     type="text"
                     required
@@ -625,16 +786,16 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                     onChange={(e) =>
                       setCreateForm((p) => ({ ...p, code: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, "") }))
                     }
-                    className="flex-1 bg-transparent text-white font-mono focus:outline-none ml-1"
+                    className="flex-1 bg-transparent text-white font-mono focus:outline-none ml-1 tracking-wider"
                   />
                 </div>
-                <span className="text-[10px] text-slate-500 mt-1 block">
-                  Letters, numbers, dashes, and underscores only. Permanent link.
+                <span className="text-[10px] font-mono text-[#8d8a84] mt-1 block">
+                  Letters, numbers, dashes, and underscores only. Permanent encoded link.
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#c8c5be] mb-1.5">
                   Destination Target URL
                 </label>
                 <input
@@ -643,30 +804,30 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                   placeholder="https://lu.ma/srm-ai-hack"
                   value={createForm.destination_url}
                   onChange={(e) => setCreateForm((p) => ({ ...p, destination_url: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white placeholder-slate-600 focus:border-sky-500 focus:outline-none font-mono"
+                  className="w-full border border-white/15 bg-black/60 px-3.5 py-2.5 text-xs text-white placeholder-[#8d8a84]/50 focus:border-white focus:outline-none font-mono"
                 />
               </div>
 
               {createError && (
-                <div className="p-2.5 rounded bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300">
-                  {createError}
+                <div className="border border-rose-500/30 bg-rose-950/20 p-3 text-xs text-rose-300 font-mono">
+                  ✕ {createError}
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10 font-mono">
                 <button
                   type="button"
                   onClick={() => setCreateOpen(false)}
-                  className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white"
+                  className="px-4 py-2.5 text-xs text-[#8d8a84] hover:text-white uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={createLoading}
-                  className="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-xs font-semibold text-white shadow-lg shadow-sky-500/20 transition disabled:opacity-50"
+                  className="border border-white bg-white text-black hover:bg-transparent hover:text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition disabled:opacity-40"
                 >
-                  {createLoading ? "Creating..." : "Save Campaign"}
+                  {createLoading ? "Creating..." : "Save Campaign →"}
                 </button>
               </div>
             </form>
@@ -674,19 +835,25 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
         </div>
       )}
 
-      {/* EDIT MODAL */}
+      {/* =========================================================================
+          EDIT MODAL
+         ========================================================================= */}
       {editModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white">Edit Destination Target</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Updating destination URL for <code className="text-sky-300">/r/{editModal.code}</code>. Printed QR stays
-              valid.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="w-full max-w-lg border border-white/15 bg-[#0d0d0f] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.9)] relative">
+            <span className="font-mono text-[10px] text-sky-400 uppercase tracking-widest block mb-1">
+              [ DISPATCH TARGET // UPDATE ]
+            </span>
+            <h3 className="text-2xl font-extrabold uppercase tracking-tight text-white t-display">
+              Edit Destination Target
+            </h3>
+            <p className="text-xs text-[#8d8a84] mt-2 font-mono leading-relaxed">
+              Updating destination URL for <code className="text-white font-bold">/r/{editModal.code}</code>. Printed QR stays valid.
             </p>
 
-            <form onSubmit={handleEditSubmit} className="mt-5 space-y-4">
+            <form onSubmit={handleEditSubmit} className="mt-6 space-y-5">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#c8c5be] mb-1.5">
                   Campaign Name
                 </label>
                 <input
@@ -694,12 +861,12 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                   required
                   value={editForm.name}
                   onChange={(e) => setEditForm((p) => ({ ...p, name: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none"
+                  className="w-full border border-white/15 bg-black/60 px-3.5 py-2.5 text-xs text-white focus:border-white focus:outline-none font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#c8c5be] mb-1.5">
                   Destination Target URL
                 </label>
                 <input
@@ -707,43 +874,43 @@ export function QrDashboard({ onCustomizeQr }: QrDashboardProps) {
                   required
                   value={editForm.destination_url}
                   onChange={(e) => setEditForm((p) => ({ ...p, destination_url: e.target.value }))}
-                  className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none font-mono"
+                  className="w-full border border-white/15 bg-black/60 px-3.5 py-2.5 text-xs text-white focus:border-white focus:outline-none font-mono"
                 />
               </div>
 
-              <div className="flex items-center gap-2 pt-1">
+              <div className="flex items-center gap-3 pt-2">
                 <input
                   type="checkbox"
                   id="edit-active"
                   checked={editForm.active}
                   onChange={(e) => setEditForm((p) => ({ ...p, active: e.target.checked }))}
-                  className="h-4 w-4 rounded accent-sky-500"
+                  className="h-4 w-4 bg-black border-white/20 accent-white"
                 />
-                <label htmlFor="edit-active" className="text-xs text-slate-300">
+                <label htmlFor="edit-active" className="text-xs text-[#c8c5be] font-mono">
                   Campaign Active (unchecked returns 404 on scan)
                 </label>
               </div>
 
               {editError && (
-                <div className="p-2.5 rounded bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300">
-                  {editError}
+                <div className="border border-rose-500/30 bg-rose-950/20 p-3 text-xs text-rose-300 font-mono">
+                  ✕ {editError}
                 </div>
               )}
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10 font-mono">
                 <button
                   type="button"
                   onClick={() => setEditModal(null)}
-                  className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white"
+                  className="px-4 py-2.5 text-xs text-[#8d8a84] hover:text-white uppercase tracking-wider"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={editLoading}
-                  className="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-xs font-semibold text-white shadow-lg shadow-sky-500/20 transition disabled:opacity-50"
+                  className="border border-white bg-white text-black hover:bg-transparent hover:text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition disabled:opacity-40"
                 >
-                  {editLoading ? "Updating..." : "Save Changes"}
+                  {editLoading ? "Updating..." : "Save Changes →"}
                 </button>
               </div>
             </form>

@@ -62,7 +62,7 @@ Scope: Production-quality dynamic QR redirect route, privacy-preserving scan tra
 - [x] G12: Next.js production build completes without errors
   CHECK: npm run build
   EXPECT: Compiled successfully
-  EVIDENCE: automatic-evidence=v1; definition-sha256=b0ed4472d4febe1265e2de61a7bd564980644551de79216818644e72867050d0; exit=0; EXPECT=matched; output-sha256=61bf6876c1b48ee58ddec45953773b3d1a2d0ba7b545f0e9f963aec5dafa4dca; output-bytes=988; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=b0ed4472d4febe1265e2de61a7bd564980644551de79216818644e72867050d0; exit=0; EXPECT=matched; output-sha256=e1eef8953471acaa313861fee84f789c80f32e9af24b439a1f021c48c922c168; output-bytes=987; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
 
 - [x] G13: Password authentication protects /qr studio and API with access key 'aura'
   CHECK: node scripts/verify-qr-subsystem.mjs --gate g13

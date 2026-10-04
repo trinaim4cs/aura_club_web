@@ -40,54 +40,92 @@ export function QrAuthLock({ onSuccess }: QrAuthLockProps) {
   };
 
   return (
-    <div className="flex min-h-[75vh] items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl backdrop-blur">
-        <div className="text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
-            <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.75}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
+    <div className="flex min-h-[78vh] items-center justify-center p-4">
+      <div className="relative w-full max-w-lg border border-white/10 bg-[#0d0d0f]/90 p-8 sm:p-12 shadow-[0_24px_80px_rgba(0,0,0,0.8)] backdrop-blur-2xl overflow-hidden">
+        {/* Decorative corner accents */}
+        <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-white/40" />
+        <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-white/40" />
+        <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-white/40" />
+        <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-white/40" />
+
+        {/* Ambient top light */}
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-24 bg-sky-500/20 blur-3xl pointer-events-none" />
+
+        <div className="text-center relative z-10">
+          {/* Animated AURA Spark Logo */}
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-white/10 bg-white/[0.03] text-white">
+            <svg
+              className="h-9 w-9 animate-[pulse_3s_ease-in-out_infinite]"
+              viewBox="0 0 100 100"
+              fill="currentColor"
+            >
+              <path d="M50 0 C50 35 65 50 100 50 C65 50 50 65 50 100 C50 65 35 50 0 50 C35 50 50 35 50 0 Z" />
             </svg>
           </div>
-          <span className="text-[11px] font-mono uppercase tracking-widest text-sky-400">Security Gate</span>
-          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-white">AURA QR STUDIO</h1>
-          <p className="mt-2 text-xs text-slate-400">
+
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 border border-white/10 bg-white/[0.04] text-[10px] font-mono tracking-[0.16em] uppercase text-[#8d8a84] mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
+            [ SECURITY CLEARANCE // LEVEL 04 ]
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] uppercase text-[#f2efe9] t-display">
+            AURA QR STUDIO
+          </h1>
+
+          <p className="mt-3 text-xs sm:text-sm text-[#8d8a84] max-w-sm mx-auto font-sans leading-relaxed">
             Enter team access key to manage dynamic campaigns and view scan analytics.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5 relative z-10">
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">
-              Access Key
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password..."
-              autoFocus
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 font-mono"
-            />
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-[11px] font-mono uppercase tracking-[0.12em] text-[#c8c5be]">
+                Access Key
+              </label>
+              <span className="text-[10px] font-mono text-[#8d8a84]">HMAC-SHA256 SESSION</span>
+            </div>
+
+            <div className="relative">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password..."
+                autoFocus
+                className="w-full border border-white/15 bg-black/60 px-4 py-3.5 text-sm text-[#f2efe9] placeholder-[#8d8a84]/50 focus:border-white focus:outline-none focus:ring-1 focus:ring-white transition font-mono tracking-wider"
+              />
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 font-mono text-[10px] text-[#8d8a84]">
+                KEY
+              </span>
+            </div>
           </div>
 
           {error && (
-            <div className="rounded-lg bg-rose-500/10 border border-rose-500/20 p-2.5 text-center text-xs text-rose-300 font-medium">
-              {error}
+            <div className="border border-rose-500/30 bg-rose-950/20 p-3 text-center text-xs text-rose-300 font-mono tracking-wide flex items-center justify-center gap-2">
+              <span>✕</span>
+              <span>{error}</span>
             </div>
           )}
 
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full rounded-lg bg-sky-500 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-sky-500/20 hover:bg-sky-400 transition disabled:opacity-50"
+            className="group relative w-full overflow-hidden border border-white bg-[#f2efe9] py-3.5 px-6 text-xs font-mono font-bold tracking-[0.16em] uppercase text-[#0a0a0a] transition-all hover:bg-transparent hover:text-[#f2efe9] disabled:opacity-40 disabled:pointer-events-none"
           >
-            {loading ? "Verifying..." : "Unlock Studio"}
+            <span className="relative z-10 flex items-center justify-center gap-3">
+              <span>{loading ? "AUTHENTICATING CIPHER..." : "UNLOCK STUDIO"}</span>
+              <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                →
+              </span>
+            </span>
           </button>
+
+          <div className="text-center pt-2">
+            <span className="font-mono text-[9px] tracking-widest text-[#8d8a84]/60 uppercase">
+              NODE: AURA-EDGE-GATE // AUTHORIZED PERSONNEL ONLY
+            </span>
+          </div>
         </form>
       </div>
     </div>

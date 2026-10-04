@@ -36,8 +36,11 @@ export default function QrWorkspace() {
   // Loading state
   if (isAuthenticated === null) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center font-mono text-xs text-slate-400">
-        Verifying security clearance...
+      <div className="flex min-h-[65vh] flex-col items-center justify-center gap-3 font-mono text-xs text-[#8d8a84]">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
+          <span>VERIFYING SECURITY CLEARANCE...</span>
+        </div>
       </div>
     );
   }
@@ -48,77 +51,91 @@ export default function QrWorkspace() {
   }
 
   return (
-    <div className="qr-studio w-full max-w-7xl mx-auto space-y-6" data-no-cursor="true">
-      {/* Top Workspace Header & Navigation */}
-      <header className="flex flex-wrap items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 rounded-2xl px-6 py-4 shadow-xl backdrop-blur">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 font-extrabold text-sm font-mono">
-            QR
+    <div className="qr-studio w-full space-y-8" data-no-cursor="true">
+      {/* Top Editorial Dock Header */}
+      <header className="relative flex flex-wrap items-center justify-between gap-4 border border-white/10 bg-[#0d0d0f]/90 p-4 sm:p-5 backdrop-blur-xl shadow-2xl">
+        {/* Left Branding & Live Status */}
+        <div className="flex items-center gap-4">
+          <div className="flex h-11 w-11 items-center justify-center border border-white/15 bg-white/[0.04] text-white">
+            <svg className="h-6 w-6" viewBox="0 0 100 100" fill="currentColor">
+              <path d="M50 0 C50 35 65 50 100 50 C65 50 50 65 50 100 C50 65 35 50 0 50 C35 50 50 35 50 0 Z" />
+            </svg>
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-base font-extrabold tracking-tight text-white">AURA QR SYSTEM</h1>
-              <span className="rounded bg-sky-500/10 border border-sky-500/20 px-1.5 py-0.5 text-[10px] font-mono text-sky-400 uppercase">
-                Authorized
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-sm font-extrabold tracking-[-0.02em] uppercase text-[#f2efe9] t-display">
+                AURA QR PROTOCOL
+              </h1>
+              <span className="flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-mono tracking-wider text-emerald-400 uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                ONLINE
               </span>
             </div>
-            <p className="text-xs text-slate-400">
-              Dynamic redirects, privacy scan telemetry & pixel-perfect styling
+            <p className="text-[11px] text-[#8d8a84] font-mono mt-0.5 hidden sm:block">
+              DYNAMIC DISPATCH ENGINE & PRIVACY SCAN TELEMETRY
             </p>
           </div>
         </div>
 
-        {/* Tab Controls */}
-        <div className="flex items-center rounded-xl bg-slate-950 p-1 border border-slate-800">
+        {/* Center: Brutalist Mode Switcher */}
+        <div className="flex items-center border border-white/15 bg-black/60 p-1">
           <button
             onClick={() => setActiveTab("studio")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
               activeTab === "studio"
-                ? "bg-sky-500 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#f2efe9] text-[#070708] font-bold shadow-md"
+                : "text-[#8d8a84] hover:text-[#f2efe9]"
             }`}
           >
-            <span>🎨</span>
-            <span>QR Studio</span>
+            <span>[ 01 ]</span>
+            <span>QR STUDIO</span>
           </button>
           <button
             onClick={() => setActiveTab("dashboard")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition ${
+            className={`flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
               activeTab === "dashboard"
-                ? "bg-sky-500 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#f2efe9] text-[#070708] font-bold shadow-md"
+                : "text-[#8d8a84] hover:text-[#f2efe9]"
             }`}
           >
-            <span>📊</span>
-            <span>Campaigns & Analytics</span>
+            <span>[ 02 ]</span>
+            <span>CAMPAIGNS & TELEMETRY</span>
           </button>
         </div>
 
-        {/* Action Controls */}
+        {/* Right: Technical Badges & Lock Action */}
         <div className="flex items-center gap-3">
+          <div className="hidden lg:flex flex-col items-end font-mono text-[9px] text-[#8d8a84] leading-tight">
+            <span>SESSION: 30D HMAC</span>
+            <span className="text-[#c8c5be]">EDGE: ACTIVE</span>
+          </div>
+
           <button
             onClick={handleLogout}
-            className="rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs font-mono text-slate-400 hover:border-slate-700 hover:text-rose-400 transition"
+            className="border border-white/15 bg-white/[0.02] hover:bg-white/[0.08] hover:border-white/30 px-3.5 py-2 font-mono text-xs tracking-wider text-[#8d8a84] hover:text-white transition uppercase"
+            title="Lock workspace session"
           >
-            Lock Studio
+            LOCK ⌁
           </button>
         </div>
       </header>
 
       {/* Main Workspace Body */}
-      {activeTab === "studio" ? (
-        <QrCustomizer
-          activeQr={selectedQr}
-          onSwitchToDashboard={() => setActiveTab("dashboard")}
-        />
-      ) : (
-        <QrDashboard
-          onCustomizeQr={(qr) => {
-            setSelectedQr(qr);
-            setActiveTab("studio");
-          }}
-        />
-      )}
+      <section className="relative min-h-[600px]">
+        {activeTab === "studio" ? (
+          <QrCustomizer
+            activeQr={selectedQr}
+            onSwitchToDashboard={() => setActiveTab("dashboard")}
+          />
+        ) : (
+          <QrDashboard
+            onCustomizeQr={(qr) => {
+              setSelectedQr(qr);
+              setActiveTab("studio");
+            }}
+          />
+        )}
+      </section>
     </div>
   );
 }

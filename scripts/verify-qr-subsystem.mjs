@@ -493,6 +493,203 @@ function verifyGate10() {
 }
 
 // ---------------------------------------------------------------------------
+// Gate 13: Password Authentication
+// ---------------------------------------------------------------------------
+function verifyGate13() {
+  const script = `
+    import { verifyQrPassword, createQrSessionToken, verifyQrSessionToken, isQrAuthorized, AURA_QR_COOKIE_NAME } from "@/lib/auth/qrAuth";
+    import fs from "fs";
+
+    // 1. Password check
+    if (!verifyQrPassword("aura")) throw new Error("G13 Fail: 'aura' should be valid password");
+    if (verifyQrPassword("wrong-pass")) throw new Error("G13 Fail: wrong password accepted");
+    if (verifyQrPassword("")) throw new Error("G13 Fail: empty password accepted");
+
+    // 2. Session token creation & verification
+    const token = createQrSessionToken();
+    if (!verifyQrSessionToken(token)) throw new Error("G13 Fail: generated token failed verification");
+    if (verifyQrSessionToken(token + "tampered")) throw new Error("G13 Fail: tampered token accepted");
+    if (verifyQrSessionToken("invalid.token.structure")) throw new Error("G13 Fail: invalid token structure accepted");
+
+    // 3. Request authorization via header
+    const headerReq = new Request("http://localhost:3000/api/qr", {
+      headers: { "x-aura-key": "aura" }
+    });
+    if (!isQrAuthorized(headerReq)) throw new Error("G13 Fail: x-aura-key header auth failed");
+
+    // 4. Request authorization via session cookie
+    const cookieReq = new Request("http://localhost:3000/api/qr", {
+      headers: { "cookie": AURA_QR_COOKIE_NAME + "=" + token }
+    });
+    if (!isQrAuthorized(cookieReq)) throw new Error("G13 Fail: cookie auth failed");
+
+    // 5. Unauthenticated request rejected
+    const anonReq = new Request("http://localhost:3000/api/qr");
+    if (isQrAuthorized(anonReq)) throw new Error("G13 Fail: unauthenticated request allowed");
+
+    // 6. Auth API route file check
+    const authRoute = fs.readFileSync("app/api/qr/auth/route.ts", "utf-8");
+    if (!authRoute.includes("POST") || !authRoute.includes("DELETE") || !authRoute.includes("GET")) {
+      throw new Error("G13 Fail: auth route missing required HTTP methods");
+    }
+
+    console.log("G13_VERIFIED");
+  `;
+
+  const out = runTsx(script);
+  if (!out.includes("G13_VERIFIED")) throw new Error("Gate 13 failed: " + out);
+  console.log("G13_PASSED");
+}
+
+// ---------------------------------------------------------------------------
+// Gate 14: QR Management API & Multi-Campaign CRUD
+// ---------------------------------------------------------------------------
+function verifyGate14() {
+  const script = `
+    import { isValidQRCode, isValidDestinationUrl } from "@/qr/tracking";
+    import fs from "fs";
+
+    const analytics = await import("@/qr/analytics");
+
+    // 1. Multi-event campaign slugs
+    const validSlugs = ["aura", "srm-ai-hackathon", "meetup_2026", "workshop-v2"];
+    for (const slug of validSlugs) {
+      if (!isValidQRCode(slug)) throw new Error("G14 Fail: Valid slug rejected: " + slug);
+    }
+
+    // 2. Arbitrary external destination URLs (Luma, Forms, Discord, Notion, Event page)
+    const validUrls = [
+      "https://lu.ma/aura-hackathon-2026",
+      "https://forms.gle/xYz1234567890",
+      "https://discord.gg/auraclub",
+      "https://notion.so/aura-workspace/event-page",
+      "https://join-aura.vercel.app/register"
+    ];
+    for (const url of validUrls) {
+      const res = isValidDestinationUrl(url);
+      if (!res.valid) throw new Error("G14 Fail: Valid external URL rejected: " + url + " reason: " + res.reason);
+    }
+
+    // 3. Security: dangerous schemes rejected
+    const badUrls = ["javascript:alert(document.cookie)", "data:text/html,<script>alert(1)</script>", "file:///etc/hosts"];
+    for (const bad of badUrls) {
+      if (isValidDestinationUrl(bad).valid) throw new Error("G14 Fail: Malicious URL permitted: " + bad);
+    }
+
+    // 4. CRUD functions exist in analytics module
+    if (typeof analytics.createQRCode !== "function") throw new Error("G14 Fail: createQRCode missing");
+    if (typeof analytics.updateQRCode !== "function") throw new Error("G14 Fail: updateQRCode missing");
+    if (typeof analytics.deleteQRCode !== "function") throw new Error("G14 Fail: deleteQRCode missing");
+    if (typeof analytics.listQRCodesWithStats !== "function") throw new Error("G14 Fail: listQRCodesWithStats missing");
+
+    // 5. API route handlers exist
+    if (!fs.existsSync("app/api/qr/route.ts")) throw new Error("app/api/qr/route.ts missing");
+    if (!fs.existsSync("app/api/qr/[id]/route.ts")) throw new Error("app/api/qr/[id]/route.ts missing");
+
+    console.log("G14_VERIFIED");
+  `;
+
+  const out = runTsx(script);
+  if (!out.includes("G14_VERIFIED")) throw new Error("Gate 14 failed: " + out);
+  console.log("G14_PASSED");
+}
+
+// ---------------------------------------------------------------------------
+// Gate 15: Analytics API Telemetry
+// ---------------------------------------------------------------------------
+function verifyGate15() {
+  const script = `
+    import fs from "fs";
+
+    const analytics = await import("@/qr/analytics");
+
+    if (typeof analytics.getQRAnalyticsSummary !== "function") {
+      throw new Error("G15 Fail: getQRAnalyticsSummary missing");
+    }
+
+    const routePath = "app/api/qr/[id]/analytics/route.ts";
+    if (!fs.existsSync(routePath)) throw new Error("G15 Fail: " + routePath + " missing");
+    const routeCode = fs.readFileSync(routePath, "utf-8");
+
+    if (!routeCode.includes("getQRAnalyticsSummary")) {
+      throw new Error("G15 Fail: analytics route does not call getQRAnalyticsSummary");
+    }
+    if (!routeCode.includes("isQrAuthorized")) {
+      throw new Error("G15 Fail: analytics route is not protected by isQrAuthorized");
+    }
+
+    console.log("G15_VERIFIED");
+  `;
+
+  const out = runTsx(script);
+  if (!out.includes("G15_VERIFIED")) throw new Error("Gate 15 failed: " + out);
+  console.log("G15_PASSED");
+}
+
+// ---------------------------------------------------------------------------
+// Gate 16: Dashboard & Workspace UI
+// ---------------------------------------------------------------------------
+function verifyGate16() {
+  const dashPath = "components/qr/QrDashboard.tsx";
+  const lockPath = "components/qr/QrAuthLock.tsx";
+  const workPath = "components/qr/QrWorkspace.tsx";
+  const custPath = "components/qr/QrCustomizer.tsx";
+
+  if (!fs.existsSync(dashPath)) throw new Error("components/qr/QrDashboard.tsx missing");
+  if (!fs.existsSync(lockPath)) throw new Error("components/qr/QrAuthLock.tsx missing");
+  if (!fs.existsSync(workPath)) throw new Error("components/qr/QrWorkspace.tsx missing");
+  if (!fs.existsSync(custPath)) throw new Error("components/qr/QrCustomizer.tsx missing");
+
+  const dash = fs.readFileSync(dashPath, "utf-8");
+  const lock = fs.readFileSync(lockPath, "utf-8");
+  const work = fs.readFileSync(workPath, "utf-8");
+  const cust = fs.readFileSync(custPath, "utf-8");
+
+  // Dashboard checks
+  const dashTokens = [
+    "Total Campaigns",
+    "Total Scans",
+    "Unique Devices",
+    "+ New QR",
+    "Active Dynamic Campaigns",
+    "Real-Time Campaign Telemetry",
+    "Daily Scan Activity",
+    "Top Geographies",
+    "Recent Scan Events",
+  ];
+  for (const t of dashTokens) {
+    if (!dash.includes(t)) throw new Error(`Dashboard UI missing token: "${t}"`);
+  }
+
+  // Lock checks
+  if (!lock.includes("AURA QR STUDIO") || !lock.includes("Access Key")) {
+    throw new Error("Lock screen missing title or access key input");
+  }
+
+  // Workspace checks
+  if (!work.includes("QrDashboard") || !work.includes("QrCustomizer") || !work.includes("QrAuthLock")) {
+    throw new Error("Workspace missing subcomponents integration");
+  }
+
+  // Customizer screenshot replica tokens
+  const custTokens = [
+    "FRAMES",
+    "LOGOS",
+    "SHAPES",
+    "CORNERS",
+    "SHORT URL",
+    "PREVIEW",
+    "RESET DESIGN",
+    "COMPLETE YOUR CODE",
+  ];
+  for (const t of custTokens) {
+    if (!cust.includes(t)) throw new Error(`Customizer missing replica token: "${t}"`);
+  }
+
+  console.log("G16_PASSED");
+}
+
+// ---------------------------------------------------------------------------
 // Main Switch
 // ---------------------------------------------------------------------------
 try {
@@ -524,8 +721,22 @@ try {
     case "g9":
       verifyGate9();
       break;
-    case "all":
     case "g10":
+      verifyGate10();
+      break;
+    case "g13":
+      verifyGate13();
+      break;
+    case "g14":
+      verifyGate14();
+      break;
+    case "g15":
+      verifyGate15();
+      break;
+    case "g16":
+      verifyGate16();
+      break;
+    case "all":
       verifyGate1();
       verifyGate2();
       verifyGate3();
@@ -536,6 +747,10 @@ try {
       verifyGate8();
       verifyGate9();
       verifyGate10();
+      verifyGate13();
+      verifyGate14();
+      verifyGate15();
+      verifyGate16();
       break;
     default:
       console.error(`Unknown gate target: ${targetGate}`);
@@ -545,3 +760,4 @@ try {
   console.error("Gate verification failed:", err.message);
   process.exit(1);
 }
+

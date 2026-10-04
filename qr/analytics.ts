@@ -5,6 +5,7 @@ import type {
   DeviceType,
   MetricCount,
   QRCode,
+  QRCodeWithStats,
   QRAnalyticsSummary,
   RecentScan,
   ScanMetadata,
@@ -145,6 +146,63 @@ export async function listQRCodes(): Promise<QRCode[]> {
 
   if (error || !data) return [];
   return data as QRCode[];
+}
+
+/**
+ * Deletes a dynamic QR code and cascades to its scan logs.
+ */
+export async function deleteQRCode(id: string): Promise<{ ok: boolean; error?: string }> {
+  const db = getSupabaseAdmin();
+  if (!db) return { ok: false, error: "Database not configured." };
+
+  const { error } = await db.from(QR_CODES_TABLE).delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+/**
+ * Lists all registered dynamic QR codes along with aggregated scan counters.
+ */
+export async function listQRCodesWithStats(): Promise<QRCodeWithStats[]> {
+  const db = getSupabaseAdmin();
+  if (!db) return [];
+
+  const { data: qrs, error: qrErr } = await db
+    .from(QR_CODES_TABLE)
+    .select("id, code, name, destination_url, active, created_at, updated_at")
+    .order("created_at", { ascending: false });
+
+  if (qrErr || !qrs) return [];
+
+  const { data: scans, error: scanErr } = await db
+    .from(QR_SCANS_TABLE)
+    .select("qr_id, scanned_at, visitor_hash");
+
+  const scanStats = new Map<string, { total: number; visitors: Set<string>; latest: string | null }>();
+
+  if (!scanErr && scans) {
+    for (const s of scans) {
+      if (!scanStats.has(s.qr_id)) {
+        scanStats.set(s.qr_id, { total: 0, visitors: new Set(), latest: null });
+      }
+      const st = scanStats.get(s.qr_id)!;
+      st.total++;
+      if (s.visitor_hash) st.visitors.add(s.visitor_hash);
+      if (!st.latest || new Date(s.scanned_at) > new Date(st.latest)) {
+        st.latest = s.scanned_at;
+      }
+    }
+  }
+
+  return qrs.map((q) => {
+    const st = scanStats.get(q.id);
+    return {
+      ...(q as QRCode),
+      total_scans: st?.total ?? 0,
+      unique_visitors_est: st?.visitors.size ?? 0,
+      last_scanned_at: st?.latest ?? null,
+    };
+  });
 }
 
 /**

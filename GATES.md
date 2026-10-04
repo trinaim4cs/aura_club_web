@@ -52,7 +52,7 @@ Scope: Production-quality dynamic QR redirect route, privacy-preserving scan tra
 - [x] G10: Full E2E suite passes all 15 verification criteria
   CHECK: node scripts/verify-qr-subsystem.mjs --gate all
   EXPECT: ALL_GATES_PASSED
-  EVIDENCE: automatic-evidence=v1; definition-sha256=8e897280fcf8ecb1a72d982ed6666faea4086c6d4ed085c174b22881a52d92e8; exit=0; EXPECT=matched; output-sha256=4bf2b57aa9ad8fea06772685d13e0fb46b648f933cb806f271b71cbe77d52bad; output-bytes=107; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=8e897280fcf8ecb1a72d982ed6666faea4086c6d4ed085c174b22881a52d92e8; exit=0; EXPECT=matched; output-sha256=ece1d1b5f5fb14c0cfd44d79ffa473350cf77da19f656684bc19aaf537610312; output-bytes=151; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
 
 - [x] G11: TypeScript type checking passes without errors
   CHECK: npm run lint && echo "LINT_PASSED"
@@ -62,4 +62,25 @@ Scope: Production-quality dynamic QR redirect route, privacy-preserving scan tra
 - [x] G12: Next.js production build completes without errors
   CHECK: npm run build
   EXPECT: Compiled successfully
-  EVIDENCE: automatic-evidence=v1; definition-sha256=b0ed4472d4febe1265e2de61a7bd564980644551de79216818644e72867050d0; exit=0; EXPECT=matched; output-sha256=7382bcb7fd4a4f252a43ed37c20a46a37ca0fde3b9016cccba80253e39fc9006; output-bytes=903; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=b0ed4472d4febe1265e2de61a7bd564980644551de79216818644e72867050d0; exit=0; EXPECT=matched; output-sha256=61bf6876c1b48ee58ddec45953773b3d1a2d0ba7b545f0e9f963aec5dafa4dca; output-bytes=988; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+
+- [x] G13: Password authentication protects /qr studio and API with access key 'aura'
+  CHECK: node scripts/verify-qr-subsystem.mjs --gate g13
+  EXPECT: G13_PASSED
+  EVIDENCE: automatic-evidence=v1; definition-sha256=06d5b27785cc15adcd7d072856f4d2650c394e3dfd1e10f015b166732e02fb17; exit=0; EXPECT=matched; output-sha256=780757cc53a58b7dce1221b06fadc0d75cccc7cfb0a2c379c51e4f36dda1b63d; output-bytes=11; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+
+- [x] G14: QR management API supports multi-event CRUD with custom slugs and arbitrary destinations
+  CHECK: node scripts/verify-qr-subsystem.mjs --gate g14
+  EXPECT: G14_PASSED
+  EVIDENCE: automatic-evidence=v1; definition-sha256=371a99c505f438159c78bad2aa2f81169bf92d71f450aa641368d0ecafe539b6; exit=0; EXPECT=matched; output-sha256=77f4fedfa8abbabf2a2293ba70ea95c6b58ce5433fdb1a77792fc7b2230faea5; output-bytes=11; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+
+- [x] G15: Analytics API delivers detailed time-series, geo, and client breakdowns
+  CHECK: node scripts/verify-qr-subsystem.mjs --gate g15
+  EXPECT: G15_PASSED
+  EVIDENCE: automatic-evidence=v1; definition-sha256=3134aa4f71249eaa118f21ff82241fd243d1f6c633706ee39b3f8bbdd1222b29; exit=0; EXPECT=matched; output-sha256=0d2e37a6bf23d805ce22174c1dc9409f7a6f4a38a391d5d90337eaf39a7270a2; output-bytes=11; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+
+- [x] G16: Analytics dashboard and QR manager UI components render multi-campaign controls
+  CHECK: node scripts/verify-qr-subsystem.mjs --gate g16
+  EXPECT: G16_PASSED
+  EVIDENCE: automatic-evidence=v1; definition-sha256=14b2c40d528255a79030d3c201928afdc364ae30e83bb03c2ec558842c823acb; exit=0; EXPECT=matched; output-sha256=26910eae2057286ffcc40684288ff8edd4f1a7f770ad4df54d2d6721c7297284; output-bytes=11; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+

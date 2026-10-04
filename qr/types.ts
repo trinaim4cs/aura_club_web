@@ -14,6 +14,12 @@ export interface QRCode {
   updated_at: string;
 }
 
+export interface QRCodeWithStats extends QRCode {
+  total_scans: number;
+  unique_visitors_est: number;
+  last_scanned_at: string | null;
+}
+
 export interface CreateQRCodeInput {
   code: string;
   name: string;

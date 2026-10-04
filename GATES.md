@@ -62,4 +62,4 @@ Scope: Production-quality dynamic QR redirect route, privacy-preserving scan tra
 - [x] G12: Next.js production build completes without errors
   CHECK: npm run build
   EXPECT: Compiled successfully
-  EVIDENCE: automatic-evidence=v1; definition-sha256=b0ed4472d4febe1265e2de61a7bd564980644551de79216818644e72867050d0; exit=0; EXPECT=matched; output-sha256=a7838b055be878bfb9797e7f2774c6f397a8c03c2871f433050d735882c9f30a; output-bytes=902; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=b0ed4472d4febe1265e2de61a7bd564980644551de79216818644e72867050d0; exit=0; EXPECT=matched; output-sha256=7382bcb7fd4a4f252a43ed37c20a46a37ca0fde3b9016cccba80253e39fc9006; output-bytes=903; shell=/bin/sh; cwd=/home/stealthtensor/EX/pro/aura_club_web; path=1997758aa877/20 entries

@@ -99,7 +99,7 @@ export default function QrCustomizer() {
   const scannability = evaluateScannability(config);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 md:p-8 text-slate-100">
+    <div className="qr-studio w-full max-w-6xl mx-auto p-4 md:p-8 text-slate-100 relative z-10" data-no-cursor="true">
       <div className="mb-8 border-b border-slate-800 pb-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>

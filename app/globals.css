@@ -266,6 +266,24 @@ html.has-cursor * {
   cursor: none !important;
 }
 
+/* Studio & tool pages restore precision OS cursor */
+html.has-cursor .qr-studio,
+html.has-cursor .qr-studio * {
+  cursor: auto !important;
+}
+html.has-cursor .qr-studio button,
+html.has-cursor .qr-studio a,
+html.has-cursor .qr-studio label,
+html.has-cursor .qr-studio input[type="range"],
+html.has-cursor .qr-studio input[type="color"],
+html.has-cursor .qr-studio input[type="checkbox"],
+html.has-cursor .qr-studio select {
+  cursor: pointer !important;
+}
+html.has-cursor .qr-studio input[type="text"] {
+  cursor: text !important;
+}
+
 .aura-cursor {
   position: fixed;
   left: 0;
@@ -497,6 +515,7 @@ html.has-cursor * {
   transform-origin: 0 0;
   will-change: transform;
   opacity: 0;
+  pointer-events: none;
 }
 .dock-logo svg {
   display: block;

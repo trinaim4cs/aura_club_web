@@ -37,14 +37,16 @@ export function DockLogo() {
       const hero = document.querySelector<HTMLElement>("[data-logo-wrap]");
       const stage = hero?.closest<HTMLElement>("[data-stage]") ?? null;
       if (hero && stage) {
+        el.style.display = "block";
+        el.style.pointerEvents = "auto";
         const r = layoutRect(hero, stage);
         x0 = r.x;
         y0 = r.y;
         w0 = Math.max(1, r.w);
       } else {
-        w0 = Math.min(vw * 0.88, 1180);
-        x0 = (vw - w0) / 2;
-        y0 = vh * 0.3;
+        el.style.display = "none";
+        el.style.pointerEvents = "none";
+        return;
       }
       w1 = vw < 640 ? 74 : 92;
       const h1 = (w1 * WORDMARK.h) / WORDMARK.w;

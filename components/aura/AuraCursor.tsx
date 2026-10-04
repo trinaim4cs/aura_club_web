@@ -13,6 +13,9 @@ const TEXT_INPUT = /^(text|email|tel|url|search|password|number)$/i;
 
 function stateFor(target: Element | null): { state: CursorState; label: string } {
   if (!target) return { state: "default", label: "" };
+  if (target.closest(".qr-studio, [data-no-cursor]")) {
+    return { state: "hide", label: "" };
+  }
   const marked = target.closest<HTMLElement>("[data-cursor]");
   if (marked) {
     const v = marked.dataset.cursor as CursorState;

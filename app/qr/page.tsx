@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function QrCustomizerPage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 py-12 px-4 sm:px-6">
+    <main className="qr-studio min-h-screen bg-slate-950 text-slate-100 py-12 px-4 sm:px-6 relative z-10" data-no-cursor="true">
       <QrCustomizer />
     </main>
   );

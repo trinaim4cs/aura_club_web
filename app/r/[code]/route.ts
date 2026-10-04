@@ -50,15 +50,14 @@ export async function GET(req: Request, context: RouteContext) {
 
   // Resilient fallback for primary AURA portal if DB connection is cold
   if (!qr && code === "aura") {
-    qr = {
-      id: "10b1a803-e53f-4ca2-9f27-b940bb119f25",
-      code: "aura",
-      name: "AURA Main Portal",
-      destination_url: "https://join-aura.vercel.app/",
-      active: true,
-      created_at: "2026-10-04T14:25:21.689428+00:00",
-      updated_at: "2026-10-04T14:25:21.689428+00:00",
-    };
+    return NextResponse.redirect("https://join-aura.vercel.app/", {
+      status: 302,
+      headers: {
+        "Cache-Control": "private, no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
   }
 
   // 4. Return safe 404 for missing or disabled QR codes

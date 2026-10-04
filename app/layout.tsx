@@ -68,16 +68,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og.png",
-        width: 1733,
-        height: 907,
-        alt: `${site.name} — ${site.expansion}`,
-        type: "image/png",
-      },
-      {
-        url: "/aura/og-image.png",
-        width: 1733,
-        height: 907,
+        url: `${siteUrl}/og.png`,
+        secureUrl: `${siteUrl}/og.png`,
+        width: 1200,
+        height: 630,
         alt: `${site.name} — ${site.expansion}`,
         type: "image/png",
       },
@@ -87,11 +81,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${site.name} — ${site.expansion}`,
     description: `${site.name} is the AI-native builders' club at ${site.institution}. Hackathons, projects, open learning and a way in.`,
-    images: ["/og.png"],
+    images: [`${siteUrl}/og.png`],
     creator: "@aura_srmist",
   },
   other: {
     "og:local": "en_US",
+    "og:image:secure_url": `${siteUrl}/og.png`,
     "theme-color": "#f1eee8",
   },
 };
@@ -113,6 +108,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
+        <meta property="og:image" content={`${siteUrl}/og.png`} />
+        <meta property="og:image:secure_url" content={`${siteUrl}/og.png`} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${site.name} — ${site.expansion}`} />
+        <meta name="twitter:image" content={`${siteUrl}/og.png`} />
+        <meta name="twitter:image:src" content={`${siteUrl}/og.png`} />
         <meta itemProp="name" content={`${site.name} — ${site.expansion}`} />
         <meta
           itemProp="description"

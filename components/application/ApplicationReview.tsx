@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import {
   CREATIVE_OPTIONS,
   OPERATIONS_OPTIONS,
+  cleanGitHubUsername,
   stepsFor,
   type AppValues,
   type FieldKey,
@@ -53,6 +54,10 @@ function render(field: FieldKey, v: AppValues): ReactNode {
     );
   }
   if (field === "inOtherClubs") return val ? String(val).toUpperCase() : null;
+  if (field === "githubUrl") {
+    const u = cleanGitHubUsername(String(val));
+    return u ? `github.com/${u}` : null;
+  }
   const s = String(val).trim();
   return s || null;
 }

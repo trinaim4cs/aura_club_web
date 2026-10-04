@@ -152,6 +152,23 @@ export function normalizeUrl(raw: string): string | null {
   }
 }
 
+/** Strips protocol, domain, leading @ or / and trailing slashes to extract clean GitHub username */
+export function cleanGitHubUsername(raw: string): string {
+  let s = raw.trim();
+  s = s.replace(/^(?:https?:\/\/)?(?:www\.)?github\.com\/?/i, "");
+  s = s.replace(/^[@/]+/, "");
+  s = s.split(/[?#]/)[0].replace(/\/+$/, "");
+  return s.trim();
+}
+
+/** Accepts username ("torvalds") or full link ("github.com/torvalds", "https://github.com/torvalds") and normalizes to https://github.com/username */
+export function normalizeGitHubUrl(raw: string): string | null {
+  const username = cleanGitHubUsername(raw);
+  if (!username) return null;
+  if (!/^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}$/i.test(username)) return null;
+  return `https://github.com/${username}`;
+}
+
 function hostIs(url: string, domain: string) {
   try {
     const h = new URL(url).hostname.toLowerCase();
@@ -183,8 +200,11 @@ const SCHEMAS = {
   registrationNumber: z
     .string()
     .trim()
-    .min(1, "Enter your registration number.")
-    .regex(/^[A-Za-z0-9]{8,20}$/, "Use 8–20 letters and numbers, with no spaces."),
+    .min(1, "Enter your SRM registration number.")
+    .transform((val) => val.toUpperCase())
+    .refine((val) => /^(RA|AP|TP|RM|VP|DL)\d{11,13}$/i.test(val), {
+      message: "Enter a valid SRM registration number (e.g. RA2411003010123).",
+    }),
   email: z
     .string()
     .trim()
@@ -258,10 +278,13 @@ export function validateFields(team: TeamKey, v: AppValues, only?: FieldKey[]): 
     if (!n || !hostIs(n, "linkedin.com")) errors.linkedinUrl = "Use a LinkedIn link, like linkedin.com/in/your-name";
   }
   if (wants("githubUrl")) {
-    const n = normalizeUrl(v.githubUrl);
-    if (!v.githubUrl.trim()) errors.githubUrl = "Enter your GitHub profile.";
-    else if (!n || !hostIs(n, "github.com") || new URL(n).pathname.replace(/\//g, "") === "")
-      errors.githubUrl = "Use your profile link, like github.com/your-username";
+    const raw = v.githubUrl.trim();
+    const username = cleanGitHubUsername(raw);
+    if (!raw || !username) {
+      errors.githubUrl = "Enter your GitHub username.";
+    } else if (!normalizeGitHubUrl(raw)) {
+      errors.githubUrl = "Enter a valid GitHub username (letters, numbers, single hyphens).";
+    }
   }
   if (wants("clubDetails") && v.inOtherClubs === "yes" && v.clubDetails.trim().length < 2) {
     errors.clubDetails = "List the clubs and your role in each.";
@@ -332,7 +355,7 @@ export function toRow(team: TeamKey, v: AppValues, nonce: string) {
     submission_nonce: nonce,
   };
   if (team === "technical") {
-    row.github_url = url(v.githubUrl);
+    row.github_url = normalizeGitHubUrl(v.githubUrl) || (v.githubUrl.trim() ? normalizeUrl(v.githubUrl) : null);
     row.technical_work_links = clean(v.workLinks).map((l) => normalizeUrl(l));
     row.technical_project_story = v.projectStory.trim();
     row.technical_ai_usage = v.aiUsage.trim();

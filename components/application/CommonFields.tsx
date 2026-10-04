@@ -26,10 +26,12 @@ export function CommonFields({ api, part }: { api: ApplicationDraftApi; part: "a
           name="registrationNumber"
           required
           value={v.registrationNumber}
-          onChange={(x) => setField("registrationNumber", x.replace(/\s/g, "").toUpperCase())}
+          onChange={(x) => setField("registrationNumber", x.replace(/[^A-Za-z0-9]/g, "").toUpperCase())}
           error={errors.registrationNumber}
           autoComplete="off"
-          maxLength={20}
+          maxLength={15}
+          placeholder="RA2411003010123"
+          hint="SRMIST Registration Number (e.g. RA2311003010123)"
         />
         <TextField
           label="EMAIL ADDRESS"

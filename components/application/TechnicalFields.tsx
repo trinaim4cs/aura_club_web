@@ -1,8 +1,8 @@
 "use client";
 
 import type { ApplicationDraftApi } from "./useApplicationDraft";
-import { LinkListField, TextAreaField, TextField } from "./Fields";
-import { LIMITS } from "@/lib/validation/application";
+import { LinkListField, PrefixTextField, TextAreaField, TextField } from "./Fields";
+import { LIMITS, cleanGitHubUsername } from "@/lib/validation/application";
 import { rowErrorsFor } from "./utils";
 
 export function TechnicalFields({ api, part }: { api: ApplicationDraftApi; part: "work" | "how" }) {
@@ -12,17 +12,17 @@ export function TechnicalFields({ api, part }: { api: ApplicationDraftApi; part:
   if (part === "work") {
     return (
       <div className="f-stack">
-        <TextField
+        <PrefixTextField
           label="GITHUB PROFILE"
           name="githubUrl"
-          type="url"
           required
-          value={v.githubUrl}
-          onChange={(x) => setField("githubUrl", x)}
+          prefix="github.com/"
+          value={cleanGitHubUsername(v.githubUrl)}
+          onChange={(x) => setField("githubUrl", cleanGitHubUsername(x))}
           error={errors.githubUrl}
-          inputMode="url"
-          placeholder="github.com/your-username"
-          maxLength={300}
+          placeholder="your-username"
+          maxLength={39}
+          hint="Just your GitHub username. We'll link directly to your profile."
         />
         <LinkListField
           label="SHOW US SOMETHING YOU HAVE BUILT."

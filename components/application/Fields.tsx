@@ -87,6 +87,56 @@ export function TextField({
   );
 }
 
+export function PrefixTextField({
+  label,
+  required,
+  hint,
+  error,
+  name,
+  value,
+  onChange,
+  prefix,
+  placeholder,
+  maxLength,
+}: Common & {
+  value: string;
+  onChange: (v: string) => void;
+  prefix: string;
+  placeholder?: string;
+  maxLength?: number;
+}) {
+  const id = useId();
+  return (
+    <div className="f" data-invalid={error ? "true" : "false"}>
+      <Label id={id} label={label} required={required} />
+      <div className="flex items-center border-b-[1.5px] border-[var(--line)] focus-within:border-[var(--ink)] focus-within:shadow-[0_1.5px_0_0_var(--ink)] transition min-h-[52px]">
+        <span className="font-mono text-base sm:text-[1.15rem] text-[var(--ink-3)] select-none pr-1 tracking-tight whitespace-nowrap">
+          {prefix}
+        </span>
+        <input
+          id={id}
+          name={name}
+          data-field={name}
+          className="flex-1 bg-transparent border-0 p-0 text-[var(--ink)] font-sans text-base sm:text-[1.15rem] leading-[1.4] outline-none focus:ring-0 placeholder:text-[var(--ink-3)] placeholder:opacity-50 min-w-0"
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          required={required}
+          aria-required={required}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describe(id, hint, error)}
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+        />
+      </div>
+      <Msg id={id} error={error} hint={hint} />
+    </div>
+  );
+}
+
 export function TextAreaField({
   label,
   required,
